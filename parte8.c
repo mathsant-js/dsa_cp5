@@ -11,15 +11,23 @@ struct No
 
 No *inserirInicio(No *inicio, int valor)
 {
-    No* novo = malloc(sizeof(struct No));
+    No *novo = malloc(sizeof(No));
+
+    if (novo == NULL)
+    {
+        printf("Erro ao alocar memória.\n");
+        return inicio;
+    }
+
     novo->valor = valor;
     novo->proximo = inicio;
-    inicio = novo;
+
+    return novo;
 }
 
 void imprimirLista(No *inicio)
 {
-    No* atual = inicio;
+    No *atual = inicio;
 
     while (atual != NULL)
     {
@@ -30,25 +38,28 @@ void imprimirLista(No *inicio)
     printf("NULL\n");
 }
 
-int buscar(No *inicio, int valor)
+No *buscar(No *inicio, int valor)
 {
-    No* atual = inicio;
+    No *atual = inicio;
 
     while (atual != NULL)
     {
         if (atual->valor == valor)
             return atual;
+
         atual = atual->proximo;
     }
 
     return NULL;
 }
 
-int listaVazia(No *inicio) {
-    
+int listaVazia(No *inicio)
+{
+    return inicio == NULL;
 }
 
-int main() {
+int main()
+{
     No *inicio = NULL;
     int opcao, valor;
 
@@ -62,6 +73,7 @@ int main() {
         printf("0 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &opcao);
+
         switch (opcao)
         {
         case 1:
@@ -70,18 +82,48 @@ int main() {
 
             inicio = inserirInicio(inicio, valor);
             break;
-        case 2:
-            imprimirLista(inicio);
-            break;
-        case 3:
-            printf("Valor para buscar: ");
-            scanf("%d", &valor);
 
-            buscar(inicio, valor);
+        case 2:
+            if (listaVazia(inicio)) {
+                printf("Nao ha valor para imprimir, porque a lista esta vazia.\n");
+            } else {
+                imprimirLista(inicio);
+            }
             break;
+
+        case 3:
+            if (listaVazia(inicio)) {
+                printf("Nao ha valor para procurar, porque a lista esta vazia.\n");
+            } else {
+                printf("Valor para buscar: ");
+                scanf("%d", &valor);
+
+                No *resultado = buscar(inicio, valor);
+
+                if (resultado != NULL)
+                    printf("Valor encontrado: %d\n", resultado->valor);
+                else
+                    printf("Valor nao encontrado.\n");
+            }
+            break;
+
         case 4:
-            // verificar se a lista está vazia e mostrar inicio->valor
+            if (listaVazia(inicio))
+                printf("Nao ha primeiro elemento, porque a lista está vazia.\n");
+            else
+                printf("Primeiro elemento: %d\n", inicio->valor);
+
             break;
+
+        case 0:
+            printf("Encerrando...\n");
+            break;
+
+        default:
+            printf("Opcao invalida.\n");
         }
+
     } while (opcao != 0);
+
+    return 0;
 }
